@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chat Room</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 15px 30px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .logout-button {
+            padding: 8px 16px;
+            background-color: #ff3b30;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .logout-button:hover {
+            background-color: #d93629;
+        }
+
+        .system-message {
+            background-color: #f0f2f5;
+            color: #65676b;
+            text-align: center;
+            font-style: italic;
+            padding: 15px 20px;
+            border-radius: 25px;
+            margin: 10px 0;
+            font-size: 1em;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #d1d8e0;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            background: linear-gradient(135deg, #e4e6eb, #f0f2f5);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .room-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .room-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #0084ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .room-details h2 {
+            font-size: 18px;
+            color: #1c1e21;
+            margin-bottom: 4px;
+        }
+
+        .room-details p {
+            font-size: 13px;
+            color: #65676b;
+        }
+
+        .message-group {
+            margin: 15px 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message-group .message {
+            margin: 2px 0;
+        }
+
+        .message-group .message:first-child {
+            border-radius: 15px;
+        }
+
+        .message-group .message:not(:first-child) {
+            border-radius: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background-color: #e4e6eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #050505;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .user-email {
+            font-size: 16px;
+            font-weight: bold;
+            color: #050505;
+        }
+
+        .chat-container {
+            max-width: 1200px;
+            margin: 90px auto 20px;
+            padding: 0 20px;
+        }
+
+        #chat-log {
+            height: calc(100vh - 250px);
+            overflow-y: auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-container {
+            margin: 10px 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            margin: 2px 0;
+            word-wrap: break-word;
+        }
+
+        .message-right {
+            align-self: flex-end;
+            background-color: #0084ff;
+            color: white;
+        }
+
+        .message-left {
+            align-self: flex-start;
+            background-color: #e4e6eb;
+            color: #050505;
+        }
+
+        .user-email-label {
+            font-size: 0.8em;
+            margin-bottom: 2px;
+            color: #65676b;
+        }
+
+        .user-email-right {
+            text-align: right;
+            margin-right: 5px;
+        }
+
+        .user-email-left {
+            text-align: left;
+            margin-left: 5px;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #chat-message-input {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid #e4e6eb;
+            border-radius: 20px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        #chat-message-input:focus {
+            border-color: #0084ff;
+        }
+
+        #chat-message-submit {
+            padding: 12px 24px;
+            background: #0084ff;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        #chat-message-submit:hover {
+            background: #0073e6;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="room-info">
+                <div class="room-avatar">
+                    {{ room_name.0|upper }}
+                </div>
+                <div class="room-details">
+                    <h2>Room: {{ room_name }}</h2>
+                    <p>Live Chat</p>
+                </div>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">
+                    {{ user.email.0|upper }}
+                </div>
+                <span class="user-email">{{ user.email }}</span>
+            </div>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="logout-button">Logout</button>
+            </form>
+        </div>
+    </header>
+
+    <div class="chat-container">
+        <div id="chat-log"></div>
+        <div class="input-container">
+            <input id="chat-message-input" type="text" placeholder="Type a message...">
+            <button id="chat-message-submit">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const roomName = "{{ room_name }}";
+        const currentUserEmail = "{{ user.email }}";
+        const chatSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
+        );
+
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            const isCurrentUser = data.user === currentUserEmail;
+
+            const messageContainer = document.createElement('div');
+            messageContainer.className = 'message-container';
+
+            const userEmail = document.createElement('div');
+            userEmail.className = `user-email-label ${isCurrentUser ? 'user-email-right' : 'user-email-left'}`;
+            userEmail.textContent = data.user;
+
+            const message = document.createElement('div');
+            message.className = `message ${data.user === 'System' ? 'system-message' : (isCurrentUser ? 'message-right' : 'message-left')}`;
+            message.textContent = data.message;
+
+            messageContainer.appendChild(userEmail);
+            messageContainer.appendChild(message);
+
+            document.querySelector('#chat-log').appendChild(messageContainer);
+
+            const chatLog = document.querySelector('#chat-log');
+            chatLog.scrollTop = chatLog.scrollHeight;
+        };
+
+
+        chatSocket.onclose = function (e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function (e) {
+            if (e.keyCode === 13) {
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function (e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value.trim();
+            if (message) {
+                chatSocket.send(JSON.stringify({
+                    'message': message
+                }));
+                messageInputDom.value = '';
+            }
+        };
+    </script>
+
+</body>
+
+</html>
