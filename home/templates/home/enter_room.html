@@ -39,7 +39,7 @@
             font-size: 16px;
             outline: none;
             transition: border-color 0.3s;
-            box-sizing: border-box; 
+            box-sizing: border-box;
         }
 
         input[type="text"]:focus {
@@ -60,6 +60,32 @@
         button:hover {
             background-color: #0056b3;
         }
+
+        /* Toast Styles */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .toast {
+            display: none;
+            background-color: #4caf50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 10px;
+            animation: fadeInOut 4s;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(-10px); }
+            10% { opacity: 1; transform: translateY(0); }
+            90% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-10px); }
+        }
     </style>
 </head>
 <body>
@@ -72,6 +98,31 @@
             <button type="submit">Join Room</button>
         </form>
     </div>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const successMessage = "{{ success|escapejs }}"; 
+            if (successMessage) {
+                showToast(successMessage);
+            }
+        });
+
+        function showToast(message) {
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerText = message;
+            toast.style.display = 'block';
+
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                toastContainer.removeChild(toast);
+            }, 4000);
+        }
+    </script>
 
 </body>
 </html>

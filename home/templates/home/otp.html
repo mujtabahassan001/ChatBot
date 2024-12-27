@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>OTP Verification</title>
     <style>
         * {
             margin: 0;
@@ -41,8 +41,7 @@
             flex-direction: column;
         }
 
-        input[type="email"],
-        input[type="password"] {
+        input[type="text"] {
             padding: 12px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
@@ -52,8 +51,7 @@
             transition: border-color 0.3s;
         }
 
-        input[type="email"]:focus,
-        input[type="password"]:focus {
+        input[type="text"]:focus {
             border-color: #007bff;
         }
 
@@ -78,32 +76,16 @@
             margin-top: 10px;
             text-align: center;
         }
-        .link-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .link-container a {
-            color: #007bff;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .link-container a:hover {
-            color: #0056b3;
-        }
-
     </style>
 </head>
 <body>
 
     <div class="login-container">
-        <h2>Login</h2>
+        <h2>OTP Verification</h2>
         <form method="post">
             {% csrf_token %}
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit">Login</button>
+            <input type="text" name="otp" placeholder="Enter OTP" required>
+            <button type="submit">Verify</button>
 
             <div class="error-message">
                 {% if error %}
@@ -111,10 +93,6 @@
                 {% endif %}
             </div>
         </form>
-        <div class="link-container">
-            <p>Don't have an account? <a href="{% url 'signup' %}">Register</a></p>
-        </div>
-
     </div>
 
 </body>
