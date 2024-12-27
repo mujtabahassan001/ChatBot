@@ -47,7 +47,7 @@ def otp_verify(request):
             if user:
                 login(request, user)
                 request.session['success_message'] = f'({email}) logged in successfully'
-                return redirect('enter_room')  # Redirect to enter_room page
+                return redirect('enter_room')  
         else:
             return render(request, 'home/otp.html', {'error': 'Invalid OTP. Please try again.'})
     
