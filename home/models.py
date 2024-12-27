@@ -1,6 +1,7 @@
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.db import models
 from django.conf import settings
+from twilio.rest import Client
 
 class ChatMessage(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -56,3 +57,49 @@ class CustomUser(AbstractBaseUser):
     def is_authenticated(self):
 
         return True
+
+
+
+#################   TWILIO PHONE NUMBER VERIFICATION ###################
+
+
+class Score(models.Model):
+    score = models.PositiveIntegerField()
+
+    def __str__(self):
+        return str(self.score)
+
+    def save(self, *args, **kwargs):
+        if self.score < 60:
+            account_sid = 'ACc5ca92d65de09866083afb033173ae4d'
+            auth_token = '22f7469c7a025b71caae8100332aeec3'
+            client = Client(account_sid, auth_token)
+            twilio_phone_number = '+12314224251'
+            message = client.messages.create(
+                from_= twilio_phone_number,
+                body='Hi Whatsup. This is Twilio',
+                to='+923499691406'
+            )
+            print(message.sid)
+            
+        super().save(*args, **kwargs)
+        if self.score < 40:
+            account_sid = 'ACc5ca92d65de09866083afb033173ae4d'
+            auth_token = '22f7469c7a025b71caae8100332aeec3'
+            client = Client(account_sid, auth_token)
+
+            to_phone_number = '+923499691406'  
+
+            try:
+                verification = client.verify \
+                    .v2 \
+                    .services('VA5cc2e2bfe68041154494af4dccf70205') \
+                    .verifications \
+                    .create(to=to_phone_number, channel='sms')
+
+                print(f"OTP sent: {verification.status}")
+
+            except Exception as e:
+                print(f"Error sending OTP: {e}")
+
+        super().save(*args, **kwargs)

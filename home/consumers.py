@@ -20,7 +20,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         await self.accept()
 
-        # Send join message
         join_message = f"{self.user.email} has joined the chat"
         await self.channel_layer.group_send(
             self.room_group_name,
@@ -31,7 +30,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }
         )
 
-        # Send previous chat messages
         messages = await self.get_chat_messages(self.room_name)
         for message in messages:
             await self.send(text_data=json.dumps({
@@ -57,7 +55,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     self.channel_name
                 )
         except Exception as e:
-            print(f"Error in disconnect: {e}")  # Print any disconnect error
+            print(f"Error in disconnect: {e}")  
 
     async def receive(self, text_data):
         try:
@@ -75,7 +73,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 }
             )
         except Exception as e:
-            print(f"Error in receive: {e}")  # Print any receive error
+            print(f"Error in receive: {e}")  
 
     async def chat_message(self, event):
         message = event['message']
